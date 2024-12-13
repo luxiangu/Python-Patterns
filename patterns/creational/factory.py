@@ -12,11 +12,8 @@ in the same way independently of the language.
 
 *Where can the pattern be used practically?
 The Factory Method can be seen in the popular web framework Django:
-http://django.wikispaces.asu.edu/*NEW*+Django+Design+Patterns For
-example, in a contact form of a web page, the subject and the message
-fields are created using the same form factory (CharField()), even
-though they have different implementations according to their
-purposes.
+https://docs.djangoproject.com/en/4.0/topics/forms/formsets/
+For example, different types of forms are created using a formset_factory
 
 *References:
 http://ginstrom.com/scribbles/2007/10/08/design-patterns-python-style/
@@ -25,14 +22,21 @@ http://ginstrom.com/scribbles/2007/10/08/design-patterns-python-style/
 Creates objects without having to specify the exact class.
 """
 
+from typing import Dict, Protocol, Type
+
+
+class Localizer(Protocol):
+    def localize(self, msg: str) -> str:
+        pass
+
 
 class GreekLocalizer:
     """A simple localizer a la gettext"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.translations = {"dog": "σκύλος", "cat": "γάτα"}
 
-    def localize(self, msg):
+    def localize(self, msg: str) -> str:
         """We'll punt if we don't have a translation"""
         return self.translations.get(msg, msg)
 
@@ -40,16 +44,17 @@ class GreekLocalizer:
 class EnglishLocalizer:
     """Simply echoes the message"""
 
-    def localize(self, msg):
+    def localize(self, msg: str) -> str:
         return msg
 
 
-def get_localizer(language="English"):
+def get_localizer(language: str = "English") -> Localizer:
     """Factory"""
-    localizers = {
+    localizers: Dict[str, Type[Localizer]] = {
         "English": EnglishLocalizer,
         "Greek": GreekLocalizer,
     }
+
     return localizers[language]()
 
 
@@ -70,4 +75,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

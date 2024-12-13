@@ -5,8 +5,8 @@ http://code.activestate.com/recipes/413838-memento-closure/
 Provides the ability to restore an object to its previous state.
 """
 
-from copy import copy
-from copy import deepcopy
+from copy import copy, deepcopy
+from typing import Callable, List
 
 
 def memento(obj, deep=False):
@@ -26,7 +26,7 @@ class Transaction:
     """
 
     deep = False
-    states = []
+    states: List[Callable[[], None]] = []
 
     def __init__(self, deep, *targets):
         self.deep = deep
@@ -41,40 +41,34 @@ class Transaction:
             a_state()
 
 
-class Transactional:
+def Transactional(method):
     """Adds transactional semantics to methods. Methods decorated  with
+    @Transactional will roll back to entry-state upon exceptions.
 
-    @Transactional will rollback to entry-state upon exceptions.
+    :param method: The function to be decorated.
     """
-
-    def __init__(self, method):
-        self.method = method
-
-    def __get__(self, obj, T):
-        def transaction(*args, **kwargs):
-            state = memento(obj)
-            try:
-                return self.method(obj, *args, **kwargs)
-            except Exception as e:
-                state()
-                raise e
-
-        return transaction
-
+    def transaction(obj, *args, **kwargs):
+        state = memento(obj)
+        try:
+            return method(obj, *args, **kwargs)
+        except Exception as e:
+            state()
+            raise e
+    return transaction
 
 class NumObj:
     def __init__(self, value):
         self.value = value
 
     def __repr__(self):
-        return '<%s: %r>' % (self.__class__.__name__, self.value)
+        return f"<{self.__class__.__name__}: {self.value!r}>"
 
     def increment(self):
         self.value += 1
 
     @Transactional
     def do_stuff(self):
-        self.value = '1111'  # <- invalid value
+        self.value = "1111"  # <- invalid value
         self.increment()  # <- will fail and rollback
 
 
@@ -134,4 +128,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(optionflags=doctest.ELLIPSIS)

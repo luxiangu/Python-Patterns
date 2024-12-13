@@ -39,34 +39,32 @@ class CompositeSpecification(Specification):
 
 
 class AndSpecification(CompositeSpecification):
-    _one = Specification()
-    _other = Specification()
-
     def __init__(self, one, other):
-        self._one = one
-        self._other = other
+        self._one: Specification = one
+        self._other: Specification = other
 
     def is_satisfied_by(self, candidate):
-        return bool(self._one.is_satisfied_by(candidate) and self._other.is_satisfied_by(candidate))
+        return bool(
+            self._one.is_satisfied_by(candidate)
+            and self._other.is_satisfied_by(candidate)
+        )
 
 
 class OrSpecification(CompositeSpecification):
-    _one = Specification()
-    _other = Specification()
-
     def __init__(self, one, other):
-        self._one = one
-        self._other = other
+        self._one: Specification = one
+        self._other: Specification = other
 
     def is_satisfied_by(self, candidate):
-        return bool(self._one.is_satisfied_by(candidate) or self._other.is_satisfied_by(candidate))
+        return bool(
+            self._one.is_satisfied_by(candidate)
+            or self._other.is_satisfied_by(candidate)
+        )
 
 
 class NotSpecification(CompositeSpecification):
-    _wrapped = Specification()
-
     def __init__(self, wrapped):
-        self._wrapped = wrapped
+        self._wrapped: Specification = wrapped
 
     def is_satisfied_by(self, candidate):
         return bool(not self._wrapped.is_satisfied_by(candidate))
@@ -84,7 +82,7 @@ class UserSpecification(CompositeSpecification):
 
 class SuperUserSpecification(CompositeSpecification):
     def is_satisfied_by(self, candidate):
-        return getattr(candidate, 'super_user', False)
+        return getattr(candidate, "super_user", False)
 
 
 def main():
@@ -105,6 +103,7 @@ def main():
     """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

@@ -28,39 +28,47 @@ Adds behaviour to object without affecting its class.
 class TextTag:
     """Represents a base text tag"""
 
-    def __init__(self, text):
+    def __init__(self, text: str) -> None:
         self._text = text
 
-    def render(self):
+    def render(self) -> str:
         return self._text
 
 
 class BoldWrapper(TextTag):
     """Wraps a tag in <b>"""
 
-    def __init__(self, wrapped):
+    def __init__(self, wrapped: TextTag) -> None:
         self._wrapped = wrapped
 
-    def render(self):
-        return "<b>{}</b>".format(self._wrapped.render())
+    def render(self) -> str:
+        return f"<b>{self._wrapped.render()}</b>"
 
 
 class ItalicWrapper(TextTag):
     """Wraps a tag in <i>"""
 
-    def __init__(self, wrapped):
+    def __init__(self, wrapped: TextTag) -> None:
         self._wrapped = wrapped
 
-    def render(self):
-        return "<i>{}</i>".format(self._wrapped.render())
+    def render(self) -> str:
+        return f"<i>{self._wrapped.render()}</i>"
 
 
-if __name__ == '__main__':
-    simple_hello = TextTag("hello, world!")
-    special_hello = ItalicWrapper(BoldWrapper(simple_hello))
-    print("before:", simple_hello.render())
-    print("after:", special_hello.render())
+def main():
+    """
+    >>> simple_hello = TextTag("hello, world!")
+    >>> special_hello = ItalicWrapper(BoldWrapper(simple_hello))
 
-### OUTPUT ###
-# before: hello, world!
-# after: <i><b>hello, world!</b></i>
+    >>> print("before:", simple_hello.render())
+    before: hello, world!
+
+    >>> print("after:", special_hello.render())
+    after: <i><b>hello, world!</b></i>
+    """
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

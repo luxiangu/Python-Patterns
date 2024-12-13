@@ -1,6 +1,9 @@
+from typing import Dict
+
+
 class RegistryHolder(type):
 
-    REGISTRY = {}
+    REGISTRY: Dict[str, "RegistryHolder"] = {}
 
     def __new__(cls, name, bases, attrs):
         new_cls = type.__new__(cls, name, bases, attrs)
@@ -42,4 +45,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(optionflags=doctest.ELLIPSIS)

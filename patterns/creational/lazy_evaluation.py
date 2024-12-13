@@ -10,7 +10,7 @@ django
 https://github.com/django/django/blob/ffd18732f3ee9e6f0374aff9ccf350d85187fac2/django/utils/functional.py#L19
 pip
 https://github.com/pypa/pip/blob/cb75cca785629e15efb46c35903827b3eae13481/pip/utils/__init__.py#L821
-pyramimd
+pyramid
 https://github.com/Pylons/pyramid/blob/7909e9503cdfc6f6e84d2c7ace1d3c03ca1d8b73/pyramid/decorator.py#L4
 werkzeug
 https://github.com/pallets/werkzeug/blob/5a2bf35441006d832ab1ed5a31963cbc366c99ac/werkzeug/utils.py#L35
@@ -36,7 +36,13 @@ class lazy_property:
 
 
 def lazy_property2(fn):
-    attr = '_lazy__' + fn.__name__
+    """
+    A lazy property decorator.
+
+    The function decorated is called the first time to retrieve the result and
+    then that calculated result is used the next time you access the value.
+    """
+    attr = "_lazy__" + fn.__name__
 
     @property
     def _lazy_property(self):
@@ -101,4 +107,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(optionflags=doctest.ELLIPSIS)

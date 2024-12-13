@@ -34,7 +34,7 @@ Decouples the creation of a complex object and its representation.
 
 # Abstract Building
 class Building:
-    def __init__(self):
+    def __init__(self) -> None:
         self.build_floor()
         self.build_size()
 
@@ -44,25 +44,25 @@ class Building:
     def build_size(self):
         raise NotImplementedError
 
-    def __repr__(self):
-        return 'Floor: {0.floor} | Size: {0.size}'.format(self)
+    def __repr__(self) -> str:
+        return "Floor: {0.floor} | Size: {0.size}".format(self)
 
 
 # Concrete Buildings
 class House(Building):
-    def build_floor(self):
-        self.floor = 'One'
+    def build_floor(self) -> None:
+        self.floor = "One"
 
-    def build_size(self):
-        self.size = 'Big'
+    def build_size(self) -> None:
+        self.size = "Big"
 
 
 class Flat(Building):
-    def build_floor(self):
-        self.floor = 'More than One'
+    def build_floor(self) -> None:
+        self.floor = "More than One"
 
-    def build_size(self):
-        self.size = 'Small'
+    def build_size(self) -> None:
+        self.size = "Small"
 
 
 # In some very complex cases, it might be desirable to pull out the building
@@ -72,19 +72,19 @@ class Flat(Building):
 
 
 class ComplexBuilding:
-    def __repr__(self):
-        return 'Floor: {0.floor} | Size: {0.size}'.format(self)
+    def __repr__(self) -> str:
+        return "Floor: {0.floor} | Size: {0.size}".format(self)
 
 
 class ComplexHouse(ComplexBuilding):
-    def build_floor(self):
-        self.floor = 'One'
+    def build_floor(self) -> None:
+        self.floor = "One"
 
-    def build_size(self):
-        self.size = 'Big and fancy'
+    def build_size(self) -> None:
+        self.size = "Big and fancy"
 
 
-def construct_building(cls):
+def construct_building(cls) -> Building:
     building = cls()
     building.build_floor()
     building.build_size()
@@ -110,4 +110,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

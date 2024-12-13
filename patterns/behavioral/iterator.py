@@ -7,16 +7,19 @@ Traverses a container and accesses the container's elements.
 """
 
 
-def count_to(count):
+def count_to(count: int):
     """Counts by word numbers, up to a maximum of five"""
     numbers = ["one", "two", "three", "four", "five"]
-    for number in numbers[:count]:
-        yield number
+    yield from numbers[:count]
 
 
 # Test the generator
-count_to_two = lambda: count_to(2)
-count_to_five = lambda: count_to(5)
+def count_to_two() -> None:
+    return count_to(2)
+
+
+def count_to_five() -> None:
+    return count_to(5)
 
 
 def main():
@@ -40,4 +43,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

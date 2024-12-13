@@ -34,13 +34,14 @@ class CPU:
     """
     Simple CPU representation.
     """
-    def freeze(self):
+
+    def freeze(self) -> None:
         print("Freezing processor.")
 
-    def jump(self, position):
+    def jump(self, position: str) -> None:
         print("Jumping to:", position)
 
-    def execute(self):
+    def execute(self) -> None:
         print("Executing.")
 
 
@@ -48,22 +49,25 @@ class Memory:
     """
     Simple memory representation.
     """
-    def load(self, position, data):
-        print("Loading from {0} data: '{1}'.".format(position, data))
+
+    def load(self, position: str, data: str) -> None:
+        print(f"Loading from {position} data: '{data}'.")
 
 
 class SolidStateDrive:
     """
     Simple solid state drive representation.
     """
-    def read(self, lba, size):
-        return "Some data from sector {0} with size {1}".format(lba, size)
+
+    def read(self, lba: str, size: str) -> str:
+        return f"Some data from sector {lba} with size {size}"
 
 
 class ComputerFacade:
     """
     Represents a facade for various computer parts.
     """
+
     def __init__(self):
         self.cpu = CPU()
         self.memory = Memory()
@@ -89,4 +93,5 @@ def main():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(optionflags=doctest.ELLIPSIS)

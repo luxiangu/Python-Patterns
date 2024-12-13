@@ -9,85 +9,90 @@ where the solution is the sum of its parts.
 https://en.wikipedia.org/wiki/Blackboard_system
 """
 
+from __future__ import annotations
+
 import abc
 import random
 
 
 class Blackboard:
-    def __init__(self):
+    def __init__(self) -> None:
         self.experts = []
         self.common_state = {
-            'problems': 0,
-            'suggestions': 0,
-            'contributions': [],
-            'progress': 0,  # percentage, if 100 -> task is finished
+            "problems": 0,
+            "suggestions": 0,
+            "contributions": [],
+            "progress": 0,  # percentage, if 100 -> task is finished
         }
 
-    def add_expert(self, expert):
+    def add_expert(self, expert: AbstractExpert) -> None:
         self.experts.append(expert)
 
 
 class Controller:
-    def __init__(self, blackboard):
+    def __init__(self, blackboard: Blackboard) -> None:
         self.blackboard = blackboard
 
     def run_loop(self):
-        while self.blackboard.common_state['progress'] < 100:
+        """
+        This function is a loop that runs until the progress reaches 100.
+        It checks if an expert is eager to contribute and then calls its contribute method.
+        """
+        while self.blackboard.common_state["progress"] < 100:
             for expert in self.blackboard.experts:
                 if expert.is_eager_to_contribute:
                     expert.contribute()
-        return self.blackboard.common_state['contributions']
+        return self.blackboard.common_state["contributions"]
 
 
 class AbstractExpert(metaclass=abc.ABCMeta):
-
-    def __init__(self, blackboard):
+    def __init__(self, blackboard: Blackboard) -> None:
         self.blackboard = blackboard
 
     @property
     @abc.abstractmethod
     def is_eager_to_contribute(self):
-        raise NotImplementedError('Must provide implementation in subclass.')
+        raise NotImplementedError("Must provide implementation in subclass.")
 
     @abc.abstractmethod
     def contribute(self):
-        raise NotImplementedError('Must provide implementation in subclass.')
+        raise NotImplementedError("Must provide implementation in subclass.")
 
 
 class Student(AbstractExpert):
     @property
-    def is_eager_to_contribute(self):
+    def is_eager_to_contribute(self) -> bool:
         return True
 
-    def contribute(self):
-        self.blackboard.common_state['problems'] += random.randint(1, 10)
-        self.blackboard.common_state['suggestions'] += random.randint(1, 10)
-        self.blackboard.common_state['contributions'] += [self.__class__.__name__]
-        self.blackboard.common_state['progress'] += random.randint(1, 2)
+    def contribute(self) -> None:
+        self.blackboard.common_state["problems"] += random.randint(1, 10)
+        self.blackboard.common_state["suggestions"] += random.randint(1, 10)
+        self.blackboard.common_state["contributions"] += [self.__class__.__name__]
+        self.blackboard.common_state["progress"] += random.randint(1, 2)
 
 
 class Scientist(AbstractExpert):
     @property
-    def is_eager_to_contribute(self):
+    def is_eager_to_contribute(self) -> int:
         return random.randint(0, 1)
 
-    def contribute(self):
-        self.blackboard.common_state['problems'] += random.randint(10, 20)
-        self.blackboard.common_state['suggestions'] += random.randint(10, 20)
-        self.blackboard.common_state['contributions'] += [self.__class__.__name__]
-        self.blackboard.common_state['progress'] += random.randint(10, 30)
+    def contribute(self) -> None:
+        self.blackboard.common_state["problems"] += random.randint(10, 20)
+        self.blackboard.common_state["suggestions"] += random.randint(10, 20)
+        self.blackboard.common_state["contributions"] += [self.__class__.__name__]
+        self.blackboard.common_state["progress"] += random.randint(10, 30)
 
 
 class Professor(AbstractExpert):
     @property
-    def is_eager_to_contribute(self):
-        return True if self.blackboard.common_state['problems'] > 100 else False
+    def is_eager_to_contribute(self) -> bool:
+        return True if self.blackboard.common_state["problems"] > 100 else False
 
-    def contribute(self):
-        self.blackboard.common_state['problems'] += random.randint(1, 2)
-        self.blackboard.common_state['suggestions'] += random.randint(10, 20)
-        self.blackboard.common_state['contributions'] += [self.__class__.__name__]
-        self.blackboard.common_state['progress'] += random.randint(10, 100)
+    def contribute(self) -> None:
+        self.blackboard.common_state["problems"] += random.randint(1, 2)
+        self.blackboard.common_state["suggestions"] += random.randint(10, 20)
+        self.blackboard.common_state["contributions"] += [self.__class__.__name__]
+        self.blackboard.common_state["progress"] += random.randint(10, 100)
 
 
 def main():
@@ -120,7 +125,8 @@ def main():
     """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     random.seed(1234)  # for deterministic doctest outputs
     import doctest
+
     doctest.testmod()
